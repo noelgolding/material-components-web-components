@@ -377,18 +377,18 @@ export abstract class TextFieldBase extends FormElement {
   }
 
   protected renderHelperText(charCounterTemplate?: TemplateResult) {
+    if (!this.shouldRenderHelperText) {
+      return undefined;
+    }
+
     const showValidationMessage = this.validationMessage && !this.isUiValid;
     const classes = {
       'mdc-text-field-helper-text--persistent': this.helperPersistent,
       'mdc-text-field-helper-text--validation-msg': showValidationMessage,
     };
 
-    const rootClasses = {
-      hidden: !this.shouldRenderHelperText,
-    };
-
     return html`
-      <div class="mdc-text-field-helper-line ${classMap(rootClasses)}">
+      <div class="mdc-text-field-helper-line">
         <div class="mdc-text-field-helper-text ${classMap(classes)}">${
         showValidationMessage ? this.validationMessage : this.helper}</div>
         ${charCounterTemplate}
@@ -397,15 +397,11 @@ export abstract class TextFieldBase extends FormElement {
   }
 
   protected renderCharCounter() {
-    const counterClasses = {
-      hidden: !this.charCounterVisible,
-    };
+    if (!this.charCounterVisible) {
+      return undefined;
+    }
 
-    return html`
-      <div
-          class="${classMap(counterClasses)}"
-          .charCounterFoundation=${characterCounter()}>
-      </div>`;
+    return html`<div .charCounterFoundation=${characterCounter()}></div>`;
   }
 
   protected onInputBlur() {
